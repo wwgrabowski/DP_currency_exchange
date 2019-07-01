@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 import datetime
 from python.interests import InterestZero
 
+
 class AccountInterface(metaclass=ABCMeta):
     @abstractmethod
     def get_saldo(self):
@@ -16,11 +17,11 @@ class AccountInterface(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def changeInterest(self, interest):
+    def change_interest(self, interest):
         pass
 
     @abstractmethod
-    def getOwner(self):
+    def get_owner(self):
         pass
 
 
@@ -46,12 +47,12 @@ class BasicAccount(AccountInterface):
             self.saldo += value
 
     def add_interest(self):
-        self.saldo += self._interest.getInterest(self.saldo)
+        self.saldo += self._interest.get_interest(self.saldo)
 
-    def changeInterest(self, interest):
+    def change_interest(self, interest):
         self._interest = interest
 
-    def getOwner(self):
+    def get_owner(self):
         return self.owner
 
 
@@ -76,12 +77,12 @@ class AccountDecorator(AccountInterface, metaclass=ABCMeta):
         self.decorated_account.add_interest()
 
     @abstractmethod
-    def changeInterest(self, interest):
-        self.decorated_account.changeInterest(interest)
+    def change_interest(self, interest):
+        self.decorated_account.change_interest(interest)
 
     @abstractmethod
-    def getOwner(self):
-        self.decorated_account.getOwner()
+    def get_owner(self):
+        self.decorated_account.get_owner()
 
 
 class DebetAccount(AccountDecorator):
@@ -103,11 +104,11 @@ class DebetAccount(AccountDecorator):
     def add_interest(self):
         self.decorated_account.add_interest()
 
-    def changeInterest(self, interest):
-        self.decorated_account.changeInterest(interest)
+    def change_interest(self, interest):
+        self.decorated_account.change_interest(interest)
 
-    def getOwner(self):
-        return self.decorated_account.getOwner()
+    def get_owner(self):
+        return self.decorated_account.get_owner()
 
 
 class CreditAccount(AccountDecorator):
@@ -127,11 +128,11 @@ class CreditAccount(AccountDecorator):
     def add_interest(self):
         self.decorated_account.add_interest()
 
-    def changeInterest(self, interest):
-        self.decorated_account.changeInterest(interest)
+    def change_interest(self, interest):
+        self.decorated_account.change_interest(interest)
 
-    def getOwner(self):
-        return self.decorated_account.getOwner()
+    def get_owner(self):
+        return self.decorated_account.get_owner()
 
     def takeCredit(self, creditValue):
         self.decorated_account.change_saldo(creditValue)

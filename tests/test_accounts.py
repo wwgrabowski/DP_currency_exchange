@@ -1,6 +1,7 @@
 
 from unittest import TestCase
-from python.accounts import BasicAccount, CreditAccount, DebetAccount
+from unittest.mock import MagicMock, Mock, patch
+from python.accounts import BasicAccount, CreditAccount, DebetAccount, InterestZero
 
 
 class TestAccounts(TestCase):
@@ -24,15 +25,14 @@ class TestAccounts(TestCase):
     def test_change_saldo_under_zero(self):
         self.assertRaises(ValueError, self.basic.change_saldo, -1200)
 
-    def test_add_interest(self):
-        self.basic._interest = 0.1
+    @patch.object(InterestZero, 'get_interest')
+    def test_add_interest(self, mock_get_interest):
+        mock_get_interest.return_value = 100
         self.basic.add_interest()
-        current_saldo = self.basic.saldo
-        self.assertEqual(current_saldo, 1100)
 
-    def test_change_interest(self):
-        pass
+        saldo = self.basic.saldo
+        self.assertEqual(saldo, 1100)
 
     def test_get_owner(self):
-        owner = self.basic.getOwner()
+        owner = self.basic.get_owner()
         self.assertEqual(owner, 'Wowo')

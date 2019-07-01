@@ -134,9 +134,9 @@ class CreditAccount(AccountDecorator):
     def get_owner(self):
         return self.decorated_account.get_owner()
 
-    def takeCredit(self, creditValue):
+    def take_credit(self, creditValue):
         self.decorated_account.change_saldo(creditValue)
         self.creditDebt += creditValue
 
-    def getCreditDebt(self):
+    def get_credit_debt(self):
         return self.creditDebt

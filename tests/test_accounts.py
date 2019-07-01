@@ -6,8 +6,7 @@ from python.accounts import BasicAccount, CreditAccount, DebetAccount
 class TestAccounts(TestCase):
 
     def setUp(self):
-        interest = 0
-        self.basic = BasicAccount('id_1', 1000, 'Wowo', interest)
+        self.basic = BasicAccount('id_1', 1000, 'Wowo')
 
     def test_get_id(self):
         basic_id = self.basic.get_id()
@@ -23,10 +22,7 @@ class TestAccounts(TestCase):
         self.assertEqual(current_saldo, 800)
 
     def test_change_saldo_under_zero(self):
-        self.basic.change_saldo(-1200)
-        pass
-        # current_saldo = self.basic.saldo
-        # self.assertEqual(current_saldo, 800)
+        self.assertRaises(ValueError, self.basic.change_saldo, -1200)
 
     def test_add_interest(self):
         self.basic._interest = 0.1

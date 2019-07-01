@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import datetime
-
+from python.interests import InterestZero
 
 class AccountInterface(metaclass=ABCMeta):
     @abstractmethod
@@ -25,10 +25,10 @@ class AccountInterface(metaclass=ABCMeta):
 
 
 class BasicAccount(AccountInterface):
-    def __init__(self, accID, saldo, owner, interest):
+    def __init__(self, accID, saldo, owner, interest=InterestZero):
         self.id = accID
         self.saldo = saldo
-        self._interest = interest
+        self._interest = interest()
         self.owner = owner
         self.openning_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
         self.account_history = []

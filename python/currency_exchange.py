@@ -15,7 +15,7 @@ class CurrencyExchange:
     def get_exchange_id(self):
         return self.exchange_id
 
-    def store_operations(self, exchange_operation):
+    def store_operation(self, exchange_operation):
         self._exchange_operations.append(exchange_operation)
 
     def get_exchange_history(self):

@@ -19,20 +19,18 @@ class AddProduct(Command):
 
 
 class Deposit(Command):
-    def __init__(self, product, value, val_type):
+    def __init__(self, product, value):
         self.product = product
         self.value = value
-        self.val_type = val_type
 
     def execute(self):
         self.product.change_saldo(self.value)
 
 
 class Withdraw(Command):
-    def __init__(self, product, value, val_type=None):
+    def __init__(self, product, value):
         self.product = product
         self.value = value
-        self.val_type = val_type
 
     def execute(self):
         try:
@@ -42,11 +40,10 @@ class Withdraw(Command):
 
 
 class Transfer(Command):
-    def __init__(self, source_product, destination_product, value, val_type=None):
+    def __init__(self, source_product, destination_product, value):
         self.source_product = source_product
         self.destination_product = destination_product
         self.value = value
-        self.val_type = val_type
 
     def execute(self):
         try:

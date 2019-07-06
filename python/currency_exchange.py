@@ -1,5 +1,7 @@
+from mediator import ExchangeMediator
 
-class CurrencyExchange:
+
+class CurrencyExchange(ExchangeMediator):
     __id_generator = 0
 
     def __init__(self):
@@ -36,5 +38,6 @@ class CurrencyExchange:
 
     def get_exchange_products(self):
         return self._exchange_products
+
 
 

@@ -1,6 +1,6 @@
 
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import patch, Mock, MagicMock
 from python.accounts import BasicAccount, CreditAccount, DebetAccount, InterestZero
 
 
@@ -77,4 +77,11 @@ class TestAccounts(TestCase):
     def test_debet_account_overdebt(self):
         self.assertRaises(ValueError, self.credit.change_saldo, -2500)
 
+    def test_accept(self):
+        id = '1'
+        visitor = Mock()
+        visitor.visit_product_id = MagicMock(return_value=id)
+        product_id = self.basic.accept(visitor)
 
+        visitor.visit_product_id.assert_called()
+        self.assertEqual(id, product_id)

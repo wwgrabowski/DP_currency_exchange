@@ -79,3 +79,13 @@ class TestCurrencyExchange(TestCase):
 
     def test_exchange_transfer_exception(self):
         self.assertRaises(AttributeError, self.exchange_1.exchange_transfer('src', 'dst', 100))
+
+    def test_accept(self):
+        history = ['1']
+        visitor = Mock()
+        visitor.visit_exchange_history = MagicMock(return_value=history)
+        exchange_history = self.exchange_1.accept(visitor)
+
+        visitor.visit_exchange_history.assert_called()
+        self.assertEqual(history, exchange_history)
+

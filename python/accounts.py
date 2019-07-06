@@ -24,6 +24,10 @@ class AccountInterface(metaclass=ABCMeta):
     def get_owner(self):
         pass
 
+    @abstractmethod
+    def accept(self, visitor) -> None:
+        pass
+
 
 class BasicAccount(AccountInterface):
     def __init__(self, accID, saldo, owner, interest=InterestZero):
@@ -54,6 +58,9 @@ class BasicAccount(AccountInterface):
 
     def get_owner(self):
         return self.owner
+
+    def accept(self, visitor):
+        return visitor.visit_product_id(self)
 
 
 class AccountDecorator(AccountInterface, metaclass=ABCMeta):
@@ -110,6 +117,9 @@ class DebetAccount(AccountDecorator):
     def get_owner(self):
         return self.decorated_account.get_owner()
 
+    def accept(self, visitor):
+        self.decorated_account.accept(visitor)
+
 
 class CreditAccount(AccountDecorator):
     def __init__(self, decorated_account):
@@ -140,3 +150,6 @@ class CreditAccount(AccountDecorator):
 
     def get_credit_debt(self):
         return self.creditDebt
+
+    def accept(self, visitor):
+        self.decorated_account.accept(visitor)

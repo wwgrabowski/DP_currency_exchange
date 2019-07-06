@@ -1,7 +1,15 @@
+from abc import ABC, abstractmethod
 from mediator import ExchangeMediator
 
 
-class CurrencyExchange(ExchangeMediator):
+class ExchangeVisitor(ABC):
+
+    @abstractmethod
+    def accept(self, visitor) -> None:
+        pass
+
+
+class CurrencyExchange(ExchangeMediator, ExchangeVisitor):
     __id_generator = 0
 
     def __init__(self):
@@ -49,4 +57,5 @@ class CurrencyExchange(ExchangeMediator):
         except AttributeError:
             print('Mediator was not initialized.')
 
-
+    def accept(self, visitor):
+        return visitor.visit_exchange_history(self)

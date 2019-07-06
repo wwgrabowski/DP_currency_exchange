@@ -39,5 +39,14 @@ class CurrencyExchange(ExchangeMediator):
     def get_exchange_products(self):
         return self._exchange_products
 
+    def execute_operation(self, operation):
+        operation.execute()
+        self._exchange_history.append(operation)
+
+    def exchange_transfer(self, src_account, dst_account, value):
+        try:
+            self.mediator.transfer(src_account, dst_account, value)
+        except AttributeError:
+            print('Mediator was not initialized.')
 
 

@@ -60,3 +60,22 @@ class TestCurrencyExchange(TestCase):
 
         products = self.exchange_1.get_exchange_products()
         self.assertEqual(result, products)
+
+    def test_execute_operation(self):
+        command = Mock()
+        command.execute = MagicMock()
+
+        self.exchange_1.execute_operation(command)
+        command.execute.assert_called()
+        self.assertEqual([command], self.exchange_1._exchange_history)
+
+    def test_exchange_transfer(self):
+        mock_mediator = Mock()
+        self.exchange_1.mediator = mock_mediator
+        mock_mediator.transfer = MagicMock()
+
+        self.exchange_1.exchange_transfer('src', 'dst', 100)
+        mock_mediator.transfer.assert_called()
+
+    def test_exchange_transfer_exception(self):
+        self.assertRaises(AttributeError, self.exchange_1.exchange_transfer('src', 'dst', 100))

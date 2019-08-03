@@ -9,7 +9,7 @@ class TestAccounts(TestCase):
     def setUp(self):
         self.basic = BasicAccount('id_1', 1000, 'Wowo')
         self.credit = CreditAccount(self.basic)
-        self.debet = DebetAccount(self.basic)
+        self.debet = DebetAccount(self.basic, max_debet=1000)
 
     def test_get_id(self):
         basic_id = self.basic.get_id()
@@ -41,7 +41,7 @@ class TestAccounts(TestCase):
 
     def test_debet_account(self):
         id_before = self.basic.get_id()
-        debet = DebetAccount(self.basic)
+        debet = DebetAccount(self.basic, 1000)
         id_after = debet.get_id()
         self.assertEqual(id_before, id_after)
 
@@ -53,7 +53,7 @@ class TestAccounts(TestCase):
 
     def test_multiple_decorators(self):
         id_before = self.basic.get_id()
-        credit_debet = CreditAccount(DebetAccount(self.basic))
+        credit_debet = CreditAccount(DebetAccount(self.basic, 1000))
         id_after = credit_debet.get_id()
         self.assertEqual(id_before, id_after)
 

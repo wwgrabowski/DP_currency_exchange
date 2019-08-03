@@ -93,8 +93,9 @@ class AccountDecorator(AccountInterface, metaclass=ABCMeta):
 
 
 class DebetAccount(AccountDecorator):
-    def __init__(self, decorated_account):
+    def __init__(self, decorated_account, max_debet):
         AccountDecorator.__init__(self, decorated_account)
+        self.max_debet = max_debet
 
     def get_id(self):
         return self.decorated_account.get_id()
@@ -103,7 +104,7 @@ class DebetAccount(AccountDecorator):
         return self.decorated_account.get_saldo()
 
     def change_saldo(self, value):
-        if self.decorated_account.saldo + value < -1000:
+        if self.decorated_account.saldo + value < -self.max_debet:
             raise ValueError('Your debet account reached limit')
         else:
             self.decorated_account.saldo += value

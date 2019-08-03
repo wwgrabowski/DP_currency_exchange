@@ -51,7 +51,10 @@ class BasicAccount(AccountInterface):
             self.saldo += value
 
     def add_interest(self):
-        self.saldo += self._interest.get_interest(self.saldo)
+        if self.get_saldo() >= 0:
+            self.saldo += self._interest.get_interest(self.saldo)
+        else:
+            raise ValueError('Can not get interest, because saldo is too low.')
 
     def change_interest(self, interest):
         self._interest = interest
@@ -146,8 +149,11 @@ class CreditAccount(AccountDecorator):
         return self.decorated_account.get_owner()
 
     def take_credit(self, creditValue):
-        self.decorated_account.change_saldo(creditValue)
-        self.creditDebt += creditValue
+        if creditValue > 0:
+            self.decorated_account.change_saldo(creditValue)
+            self.creditDebt += creditValue
+        else:
+            ValueError('Credit value can not be 0 or less.')
 
     def get_credit_debt(self):
         return self.creditDebt

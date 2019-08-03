@@ -1,6 +1,6 @@
 from unittest import TestCase
 from unittest.mock import Mock, MagicMock
-from python.command_operations import AddProduct, Deposit, Withdraw, Transfer, AddInterest
+from python.command_operations import AddProduct, Deposit, Withdraw, Transfer, AddInterest, was_executed
 
 
 class TestCommandOperations(TestCase):
@@ -55,3 +55,20 @@ class TestCommandOperations(TestCase):
         add_interest.execute()
 
         account.add_interest.assert_called()
+
+    def test_was_executed_wrapper(self):
+
+        class MockCommand:
+            def __init__(self):
+                self.executed = False
+
+            @was_executed
+            def execute(self):
+                pass
+
+        mock_command = MockCommand()
+        mock_command.execute()
+
+        self.assertTrue(mock_command.executed)
+        self.assertRaises(Exception, mock_command.execute())
+

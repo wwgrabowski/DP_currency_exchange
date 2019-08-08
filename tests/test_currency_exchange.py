@@ -32,6 +32,7 @@ class TestCurrencyExchange(TestCase):
 
     def test_execute_operations(self):
         command = Mock()
+        command.get_id = MagicMock(side_effect=['1', '2'])
         command.execute = MagicMock()
 
         self.exchange_1._exchange_operations = [command, command]
@@ -40,7 +41,7 @@ class TestCurrencyExchange(TestCase):
         self.assertEqual(2, command.execute.call_count)
         operations = self.exchange_1._exchange_operations
         self.assertEqual([], operations)
-        self.assertEqual([command, command], self.exchange_1._exchange_history)
+        self.assertEqual(['1', '2'], self.exchange_1._exchange_history)
 
     def test_get_exchange_product_by_id(self):
         product = Mock()
@@ -63,11 +64,12 @@ class TestCurrencyExchange(TestCase):
 
     def test_execute_operation(self):
         command = Mock()
+        command.get_id = MagicMock(return_value='id')
         command.execute = MagicMock()
 
         self.exchange_1.execute_operation(command)
         command.execute.assert_called()
-        self.assertEqual([command], self.exchange_1._exchange_history)
+        self.assertEqual(['id'], self.exchange_1._exchange_history)
 
     def test_exchange_transfer(self):
         mock_mediator = Mock()

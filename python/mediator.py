@@ -2,26 +2,38 @@ from python.command_operations import Deposit, Withdraw
 
 
 class Mediator:
-    def transfer(self, src_account_id, dst_account_id, value):
+    def transfer(self, src_exchange, dst_account_id, value, operation_id):
         pass
 
 
 class ConcreteMediator(Mediator):
-    def __init__(self, exchange_1, exchange_2) -> None:
-        self._exchange_1 = exchange_1
-        self._exchange_1.mediator = self
-        self._exchange_2 = exchange_2
-        self._exchange_2.mediator = self
 
-    def transfer(self, src_account_id, dst_account_id, value):
-        account_1 = self._exchange_1.get_exchange_product_by_id(src_account_id)
-        account_2 = self._exchange_2.get_exchange_product_by_id(dst_account_id)
+    def __init__(self):
+        self._exchange_dct = dict()
 
-        operation_1 = Withdraw(account_1, 100)
-        operation_2 = Deposit(account_2, 100)
+    def get_exchange_dct(self):
+        return self._exchange_dct
 
-        self._exchange_1.execute_operation(operation_1)
-        self._exchange_2.execute_operation(operation_2)
+    def add_exchange(self, exchange):
+        self._exchange_dct[exchange.get_exchange_id()] = exchange
+
+    def transfer(self, src_exchange, dst_account_id, value, src_operation_id):
+        deposit_exchange = None
+        for exchange in self._exchange_dct.values():
+            try:
+                exchange.get_exchange_product_by_id(dst_account_id)
+                deposit_exchange = exchange
+                break
+            except:
+                pass
+
+        if not deposit_exchange:
+            raise AttributeError('There is no exchange with that account id.')
+
+        dst_operation = Deposit(dst_account_id, value)
+
+        if src_operation_id in src_exchange.get_exchange_history():
+            deposit_exchange.store_operation(dst_operation)
 
 
 class ExchangeMediator:

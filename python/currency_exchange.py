@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from mediator import ExchangeMediator
+from mediator import ExchangeMediator, ConcreteMediator
+from command_operations import Withdraw
 
 
 class ExchangeVisitor(ABC):
@@ -16,6 +17,7 @@ class CurrencyExchange(ExchangeMediator, ExchangeVisitor):
         self.__id_generator += 1
         self.exchange_id = self.__id_generator
         self._exchange_operations = list()
+        self._operations_mapping = dict()
         self._exchange_history = list()
         self._exchange_products = {}
 
@@ -26,6 +28,8 @@ class CurrencyExchange(ExchangeMediator, ExchangeVisitor):
         return self.exchange_id
 
     def store_operation(self, exchange_operation):
+        operation_id = exchange_operation.get_id()
+        self._operations_mapping[operation_id] = exchange_operation
         self._exchange_operations.append(exchange_operation)
 
     def get_exchange_history(self):
@@ -34,7 +38,7 @@ class CurrencyExchange(ExchangeMediator, ExchangeVisitor):
     def execute_operations(self):
         for operation in self._exchange_operations:
             operation.execute()
-            self._exchange_history.append(operation)
+            self._exchange_history.append(operation.get_id())
         self._exchange_operations.clear()
 
     def get_exchange_product_by_id(self, product_id):
@@ -49,11 +53,14 @@ class CurrencyExchange(ExchangeMediator, ExchangeVisitor):
 
     def execute_operation(self, operation):
         operation.execute()
-        self._exchange_history.append(operation)
+        self._exchange_history.append(operation.get_id())
 
     def exchange_transfer(self, src_account, dst_account, value):
         try:
-            self.mediator.transfer(src_account, dst_account, value)
+            operation = Withdraw(src_account, value)
+            operation_id = operation.get_id()
+            self.store_operation(operation)
+            self.mediator.transfer(self, dst_account, value, operation_id)
         except AttributeError:
             print('Mediator was not initialized.')
 

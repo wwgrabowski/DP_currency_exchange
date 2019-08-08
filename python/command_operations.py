@@ -15,12 +15,19 @@ def was_executed(func):
 
 
 class Command(metaclass=ABCMeta):
+    _id_generator = 0
+
     def __init__(self):
+        Command._id_generator += 1
+        self.command_id = self._id_generator
         self.executed = False
 
     @abstractmethod
     def execute(self):
         pass
+
+    def get_id(self):
+        return self.command_id
 
 
 class AddProduct(Command):

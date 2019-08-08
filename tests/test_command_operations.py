@@ -1,12 +1,24 @@
 from unittest import TestCase
 from unittest.mock import Mock, MagicMock
-from python.command_operations import AddProduct, Deposit, Withdraw, Transfer, AddInterest, was_executed
+from python.command_operations import AddProduct, Deposit, Withdraw, Transfer, AddInterest, was_executed, Command
 
 
 class TestCommandOperations(TestCase):
 
     def setUp(self):
         pass
+
+    def test_id_generation(self):
+        Command._id_generator = 0
+        mock_product = Mock()
+        deposit = Deposit(mock_product, 100)
+        withdraw = Withdraw(mock_product, 100)
+
+        deposit_id = deposit.get_id()
+        withdraw_id = withdraw.get_id()
+
+        self.assertEqual(deposit_id, 1)
+        self.assertEqual(withdraw_id, 2)
 
     def test_add_product(self):
         mock_exchange = Mock()
